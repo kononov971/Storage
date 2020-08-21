@@ -22,7 +22,5 @@ public class Storage {
         for(int i = 0; i < numberCustomers; i++){
             new Thread(new Customer(store)).start();
         }
-
-
     }
 }

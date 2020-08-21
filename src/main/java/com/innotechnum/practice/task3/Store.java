@@ -15,7 +15,11 @@ public class Store {
         return goodsBalance;
     }
 
-    public synchronized void decreaseGoodsBalance(int decreaseValue) {
+    public synchronized int decreaseGoodsBalance(int decreaseValue) {
+        if (decreaseValue > goodsBalance) {
+            decreaseValue = goodsBalance;
+        }
         this.goodsBalance -= decreaseValue;
+        return decreaseValue;
     }
 }

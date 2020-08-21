@@ -2,16 +2,11 @@ package com.innotechnum.practice.task3;
 
 import java.util.Random;
 import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
 
 public class Customer implements Runnable {
     Store store;
     int purchaseCounter;
     int goodsCounter;
-
 
     public Customer(Store store) {
         this.store = store;
@@ -20,20 +15,15 @@ public class Customer implements Runnable {
     }
 
     public void run() {
-        while(store.getGoodsBalance() > 0 ) {
+        while(store.getGoodsBalance() > 0 || Store.barrier.getNumberWaiting() != 0) {
             try {
-                Store.barrier.await(1, TimeUnit.SECONDS);
+                Store.barrier.await();
             } catch (InterruptedException e) {
                 System.out.println("Произошло прерывание");
-            } catch (BrokenBarrierException | TimeoutException ignored) {
-
+            } catch (BrokenBarrierException e) {
             }
-            int quantityOfGoods = getRandomGoods();
-            if (store.getGoodsBalance() < quantityOfGoods) {
-                quantityOfGoods = store.getGoodsBalance();
-            }
+            int quantityOfGoods = store.decreaseGoodsBalance(getRandomGoods());
 
-            store.decreaseGoodsBalance(quantityOfGoods);
             if (quantityOfGoods > 0) {
                 purchaseCounter++;
                 goodsCounter += quantityOfGoods;
