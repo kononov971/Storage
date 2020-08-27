@@ -1,5 +1,7 @@
 package com.innotechnum.practice.task3;
 
+import org.w3c.dom.ls.LSOutput;
+
 import java.util.Random;
 import java.util.concurrent.BrokenBarrierException;
 
@@ -15,7 +17,7 @@ public class Customer implements Runnable {
     }
 
     public void run() {
-        while(store.getGoodsBalance() > 0 || Store.barrier.getNumberWaiting() != 0) {
+        while(store.getGoodsBalance() > 0) {
             try {
                 Store.barrier.await();
             } catch (InterruptedException e) {
@@ -29,6 +31,7 @@ public class Customer implements Runnable {
                 goodsCounter += quantityOfGoods;
             }
         }
+        Store.barrier.reset();
         System.out.println("Количество покупок - " + purchaseCounter + ", количество товара - " + goodsCounter);
     }
 
